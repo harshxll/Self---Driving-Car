@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>World Editor</h1>
+    <canvas id="myWorld"></canvas>
+    <div id="controls">
+        <button onclick="addRandomPoint()">Add Point</button>
+        <button onclick="addRandomSegment()">Add Segment</button>
+        <button onclick="removeRandomSegment()">Remove Segment</button>
+        <button onclick="removeRandomPoint()">Remove Point</button>
+        <button onclick="removeAll()">Remove All</button>
+    </div>
+    <script src="maths/primitive/point.js"></script>
+    <script src="maths/primitive/segment.js"></script>
+    <script src="maths/graphs.js"></script>
+    <script>
+        function addRandomPoint(){
+            const success=graph.tryAddPoint(
+                new Point(
+                Math.random()*myWorld.width,
+                Math.random()*myWorld.height
+            )
+            );
+            ctx.clearRect(0,0,myWorld.width,myWorld.height);
+            graph.draw(ctx);
+            console.log(success);
+        }
+
+        function addRandomSegment(){
+            if(graph.points.length===0){
+                console.log("No Point Present");
+                return false;
+            }
+            let index1=Math.floor(Math.random()*(graph.points.length));
+            let index2=Math.floor(Math.random()*(graph.points.length));
+              const success =graph.tryAddSegment(
+                new Segment(
+                    graph.points[index1],
+                    graph.points[index2]
+                )
+                );
+                ctx.clearRect(0,0,myWorld.width,myWorld.height);
+                graph.draw(ctx);
+                console.log(success);
+        }
+        
+        function removeRandomSegment(){
+            if(graph.segments.length===0){
+                console.log("No Segment Present");
+                console.log(false);
+            }
+            else{
+                const index1=Math.floor(Math.random()*graph.segments.length);
+                graph.removeSegment(graph.segments[index1]);
+                ctx.clearRect(0,0,myWorld.width,myWorld.height);
+                graph.draw(ctx);
+                console.log(true);
+            }
+        }
+
+        function removeRandomPoint(){
+            if(graph.points.length===0){
+                console.log("No Point Present");
+                console.log(false);
+            }
+            else{
+                const index1=Math.floor(Math.random()*graph.points.length);
+                graph.removePoint(graph.points[index1]);
+                ctx.clearRect(0,0,myWorld.width,myWorld.height);
+                graph.draw(ctx);
+                console.log(true);
+            }
+        }
+        
+        function removeAll(){
+            graph.dispose();
+            ctx.clearRect(0,0,myWorld.width,myWorld.height);
+            graph.draw(ctx);
+            console.log(true);
+        }
+        myWorld.height=500;
+        myWorld.width=500;
+        const ctx=myWorld.getContext("2d");
+       
+        const graph=new Graph();
+        graph.draw(ctx);
+    </script>
+</body>
+</html>
